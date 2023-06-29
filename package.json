@@ -42,7 +42,10 @@
   "bugs": {
     "url": "https://github.com/sakharin/hikvision-apis/issues"
   },
-  "dependencies": {},
+  "dependencies": {
+    "axios": "^1.4.0",
+    "xml-js": "^1.6.11"
+  },
   "devDependencies": {
     "@commitlint/cli": "^17.6.6",
     "@commitlint/config-conventional": "^17.6.6",
