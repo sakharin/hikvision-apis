@@ -58,7 +58,6 @@ export default class ISAPI {
     this.config = {
       auth: this.auth,
       baseURL: `http://${host}:${port}`,
-      headers: this.headers,
     };
 
     this.xml2jsOpt = {
@@ -88,7 +87,7 @@ export default class ISAPI {
     } = {},
   ): Promise<void | T> {
     return axios
-      .get(url, { ...config, ...headers })
+      .get(url, { ...config, headers })
       .then((response) => response.data)
       .then((data) => {
         if (convert) return xmljs.xml2js(data, this.xml2jsOpt) as T;
@@ -121,7 +120,7 @@ export default class ISAPI {
           : data
           ? data
           : undefined,
-        { ...config, ...headers },
+        { ...config, headers },
       )
       .then((response) => response.data)
       .then((data) => {
@@ -155,7 +154,7 @@ export default class ISAPI {
           : data
           ? data
           : undefined,
-        { ...config, ...headers },
+        { ...config, headers },
       )
       .then((response) => response.data)
       .then((data) => {
@@ -187,7 +186,7 @@ export default class ISAPI {
         convert && typeof data === 'object'
           ? xmljs.js2xml(data, this.js2xmlOpt)
           : data,
-        { ...config, ...headers },
+        { ...config, headers },
       )
       .then((response) => response.data)
       .then((data) => {
@@ -213,7 +212,7 @@ export default class ISAPI {
     } = {},
   ): Promise<void | T> {
     return axios
-      .delete(url, { ...config, ...headers })
+      .delete(url, { ...config, headers })
       .then((response) => response.data)
       .then((data) => {
         if (convert) return xmljs.xml2js(data, this.xml2jsOpt) as T;
