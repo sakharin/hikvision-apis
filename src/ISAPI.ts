@@ -5,6 +5,8 @@ import axios, {
 } from 'axios';
 import xmljs, { ElementCompact } from 'xml-js';
 
+import { userCheck } from '@types';
+
 export const nativeType = (value: string) => {
   const nValue = Number(value);
   if (!isNaN(nValue)) return nValue;
@@ -221,5 +223,11 @@ export default class ISAPI {
         error.response.data = xmljs.xml2js(error.response.data, this.xml2jsOpt);
         throw error;
       });
+  }
+
+  // /ISAPI/Security
+  public async getUserCheck(): Promise<void | userCheck> {
+    const url = '/ISAPI/Security/userCheck';
+    return this.get<userCheck>(url);
   }
 }
