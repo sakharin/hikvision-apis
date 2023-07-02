@@ -85,7 +85,7 @@ export default class ISAPI {
       config?: AxiosRequestConfig;
       headers?: RawAxiosRequestHeaders;
     } = {},
-  ): Promise<void | T> {
+  ): Promise<T> {
     return axios
       .get(url, { ...config, headers })
       .then((response) => response.data)
@@ -115,7 +115,7 @@ export default class ISAPI {
       config?: AxiosRequestConfig;
       headers?: RawAxiosRequestHeaders;
     } = {},
-  ): Promise<void | T> {
+  ): Promise<T> {
     return axios
       .post(
         url,
@@ -153,7 +153,7 @@ export default class ISAPI {
       config?: AxiosRequestConfig;
       headers?: RawAxiosRequestHeaders;
     } = {},
-  ): Promise<void | T> {
+  ): Promise<T> {
     return axios
       .put(
         url,
@@ -191,7 +191,7 @@ export default class ISAPI {
       config?: AxiosRequestConfig;
       headers?: RawAxiosRequestHeaders;
     } = {},
-  ): Promise<void | T> {
+  ): Promise<T> {
     return axios
       .patch(
         url,
@@ -226,7 +226,7 @@ export default class ISAPI {
       config?: AxiosRequestConfig;
       headers?: RawAxiosRequestHeaders;
     } = {},
-  ): Promise<void | T> {
+  ): Promise<T> {
     return axios
       .delete(url, { ...config, headers })
       .then((response) => response.data)
