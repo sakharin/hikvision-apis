@@ -94,7 +94,11 @@ export default class ISAPI {
         return data;
       })
       .catch((error) => {
-        error.response.data = xmljs.xml2js(error.response.data, this.xml2jsOpt);
+        if (convert)
+          error.response.data = xmljs.xml2js(
+            error.response.data,
+            this.xml2jsOpt,
+          );
         throw error;
       });
   }
@@ -128,7 +132,11 @@ export default class ISAPI {
         return data;
       })
       .catch((error) => {
-        error.response.data = xmljs.xml2js(error.response.data, this.xml2jsOpt);
+        if (convert)
+          error.response.data = xmljs.xml2js(
+            error.response.data,
+            this.xml2jsOpt,
+          );
         throw error;
       });
   }
@@ -162,7 +170,11 @@ export default class ISAPI {
         return data;
       })
       .catch((error) => {
-        error.response.data = xmljs.xml2js(error.response.data, this.xml2jsOpt);
+        if (convert)
+          error.response.data = xmljs.xml2js(
+            error.response.data,
+            this.xml2jsOpt,
+          );
         throw error;
       });
   }
@@ -194,7 +206,11 @@ export default class ISAPI {
         return data;
       })
       .catch((error) => {
-        error.response.data = xmljs.xml2js(error.response.data, this.xml2jsOpt);
+        if (convert)
+          error.response.data = xmljs.xml2js(
+            error.response.data,
+            this.xml2jsOpt,
+          );
         throw error;
       });
   }
@@ -219,7 +235,11 @@ export default class ISAPI {
         return data;
       })
       .catch((error) => {
-        error.response.data = xmljs.xml2js(error.response.data, this.xml2jsOpt);
+        if (convert)
+          error.response.data = xmljs.xml2js(
+            error.response.data,
+            this.xml2jsOpt,
+          );
         throw error;
       });
   }
