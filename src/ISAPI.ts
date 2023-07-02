@@ -85,7 +85,7 @@ export default class ISAPI {
       config?: AxiosRequestConfig;
       headers?: RawAxiosRequestHeaders;
     } = {},
-  ): Promise<void | T> {
+  ): Promise<T> {
     return axios
       .get(url, { ...config, headers })
       .then((response) => response.data)
@@ -94,7 +94,11 @@ export default class ISAPI {
         return data;
       })
       .catch((error) => {
-        error.response.data = xmljs.xml2js(error.response.data, this.xml2jsOpt);
+        if (convert)
+          error.response.data = xmljs.xml2js(
+            error.response.data,
+            this.xml2jsOpt,
+          );
         throw error;
       });
   }
@@ -111,7 +115,7 @@ export default class ISAPI {
       config?: AxiosRequestConfig;
       headers?: RawAxiosRequestHeaders;
     } = {},
-  ): Promise<void | T> {
+  ): Promise<T> {
     return axios
       .post(
         url,
@@ -128,7 +132,11 @@ export default class ISAPI {
         return data;
       })
       .catch((error) => {
-        error.response.data = xmljs.xml2js(error.response.data, this.xml2jsOpt);
+        if (convert)
+          error.response.data = xmljs.xml2js(
+            error.response.data,
+            this.xml2jsOpt,
+          );
         throw error;
       });
   }
@@ -145,7 +153,7 @@ export default class ISAPI {
       config?: AxiosRequestConfig;
       headers?: RawAxiosRequestHeaders;
     } = {},
-  ): Promise<void | T> {
+  ): Promise<T> {
     return axios
       .put(
         url,
@@ -162,7 +170,11 @@ export default class ISAPI {
         return data;
       })
       .catch((error) => {
-        error.response.data = xmljs.xml2js(error.response.data, this.xml2jsOpt);
+        if (convert)
+          error.response.data = xmljs.xml2js(
+            error.response.data,
+            this.xml2jsOpt,
+          );
         throw error;
       });
   }
@@ -179,7 +191,7 @@ export default class ISAPI {
       config?: AxiosRequestConfig;
       headers?: RawAxiosRequestHeaders;
     } = {},
-  ): Promise<void | T> {
+  ): Promise<T> {
     return axios
       .patch(
         url,
@@ -194,7 +206,11 @@ export default class ISAPI {
         return data;
       })
       .catch((error) => {
-        error.response.data = xmljs.xml2js(error.response.data, this.xml2jsOpt);
+        if (convert)
+          error.response.data = xmljs.xml2js(
+            error.response.data,
+            this.xml2jsOpt,
+          );
         throw error;
       });
   }
@@ -210,7 +226,7 @@ export default class ISAPI {
       config?: AxiosRequestConfig;
       headers?: RawAxiosRequestHeaders;
     } = {},
-  ): Promise<void | T> {
+  ): Promise<T> {
     return axios
       .delete(url, { ...config, headers })
       .then((response) => response.data)
@@ -219,14 +235,20 @@ export default class ISAPI {
         return data;
       })
       .catch((error) => {
-        error.response.data = xmljs.xml2js(error.response.data, this.xml2jsOpt);
+        if (convert)
+          error.response.data = xmljs.xml2js(
+            error.response.data,
+            this.xml2jsOpt,
+          );
         throw error;
       });
   }
 
   // /ISAPI/Security
-  public async getUserCheck(): Promise<void | userCheck> {
+  public async getUserCheck({
+    convert = true,
+  }: { convert?: boolean } = {}): Promise<userCheck> {
     const url = '/ISAPI/Security/userCheck';
-    return this.get<userCheck>(url);
+    return this.get<userCheck>(url, { convert });
   }
 }

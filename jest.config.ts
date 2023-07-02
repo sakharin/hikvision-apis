@@ -1,5 +1,9 @@
 /** @type {import('ts-jest').JestConfigWithTsJest} */
-import type { JestConfigWithTsJest } from 'ts-jest';
+import { pathsToModuleNameMapper, JestConfigWithTsJest } from 'ts-jest';
+const requireJSON5 = require('require-json5');
+
+const tsconfig = requireJSON5('./tsconfig.json');
+const { compilerOptions } = tsconfig;
 
 /*
  * For a detailed explanation regarding each configuration property and type check, visit:
@@ -73,9 +77,7 @@ const jestConfig: JestConfigWithTsJest = {
   // maxWorkers: "50%",
 
   // An array of directory names to be searched recursively up from the requiring module's location
-  // moduleDirectories: [
-  //   "node_modules"
-  // ],
+  moduleDirectories: ['node_modules', '<rootDir>'],
 
   // An array of file extensions your modules use
   // moduleFileExtensions: [
@@ -90,10 +92,9 @@ const jestConfig: JestConfigWithTsJest = {
   // ],
 
   // A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
-  moduleNameMapper: {
-    '^@ISAPI$': '<rootDir>/src/ISAPI',
-    '^@types$': '<rootDir>/src/types',
-  },
+  moduleNameMapper: pathsToModuleNameMapper(compilerOptions.paths, {
+    prefix: '<rootDir>/src/',
+  }),
 
   // An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
   // modulePathIgnorePatterns: [],
