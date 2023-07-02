@@ -19,6 +19,7 @@ export * from './smart_cap';
 export * from './tamper';
 export * from './temperature';
 export * from './thermal_cap';
+export * from './time';
 export * from './user_check';
 export * from './video_cap';
 export * from './video_intercom_cap';
