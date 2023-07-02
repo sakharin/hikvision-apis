@@ -5,7 +5,14 @@ import axios, {
 } from 'axios';
 import xmljs, { ElementCompact } from 'xml-js';
 
-import { DeviceCap, DeviceInfo, DeviceStatus, Time, userCheck } from '@types';
+import {
+  DeviceCap,
+  DeviceInfo,
+  DeviceStatus,
+  ResponseStatus,
+  Time,
+  userCheck,
+} from '@types';
 interface ISAPIConfig {
   host: string;
   port: string | number;
@@ -46,6 +53,10 @@ interface ISAPI {
   getDeviceInfo: (args?: { convert?: boolean }) => Promise<DeviceInfo>;
   getSystemStatus: (args?: { convert?: boolean }) => Promise<DeviceStatus>;
   getTime: (args?: { convert?: boolean }) => Promise<Time>;
+  putTime: (
+    time: Time | string,
+    args?: { convert?: boolean },
+  ) => Promise<ResponseStatus>;
 }
 
 export const nativeType = (value: string) => {
@@ -292,5 +303,12 @@ export default class Isapi implements ISAPI {
   }: { convert?: boolean } = {}): Promise<Time> {
     const url = '/ISAPI/System/time';
     return this.get<Time>(url, { convert });
+  }
+  public async putTime(
+    time: Time | string,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<ResponseStatus> {
+    const url = '/ISAPI/System/time';
+    return this.put<ResponseStatus>(url, time, { convert });
   }
 }
