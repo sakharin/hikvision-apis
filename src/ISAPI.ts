@@ -5,7 +5,7 @@ import axios, {
 } from 'axios';
 import xmljs, { ElementCompact } from 'xml-js';
 
-import { DeviceCap, userCheck } from '@types';
+import { DeviceCap, DeviceInfo, userCheck } from '@types';
 interface ISAPIConfig {
   host: string;
   port: string | number;
@@ -43,6 +43,7 @@ interface ISAPI {
 
   // /ISAPI/System
   getCapabilities: (args?: { convert?: boolean }) => Promise<DeviceCap>;
+  getDeviceInfo: (args?: { convert?: boolean }) => Promise<DeviceInfo>;
 }
 
 export const nativeType = (value: string) => {
@@ -271,5 +272,11 @@ export default class Isapi implements ISAPI {
   }: { convert?: boolean } = {}): Promise<DeviceCap> {
     const url = '/ISAPI/System/capabilities';
     return this.get<DeviceCap>(url, { convert });
+  }
+  public async getDeviceInfo({
+    convert = true,
+  }: { convert?: boolean } = {}): Promise<DeviceInfo> {
+    const url = '/ISAPI/System/deviceInfo';
+    return this.get<DeviceInfo>(url, { convert });
   }
 }

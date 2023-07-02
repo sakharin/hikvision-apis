@@ -1,5 +1,7 @@
 export * from './audio_cap';
 export * from './device_cap';
+export * from './device_info';
+export * from './device_type';
 export * from './event_cap';
 export * from './io_cap';
 export * from './response_status';
