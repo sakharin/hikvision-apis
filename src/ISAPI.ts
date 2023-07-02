@@ -245,8 +245,10 @@ export default class ISAPI {
   }
 
   // /ISAPI/Security
-  public async getUserCheck(): Promise<void | userCheck> {
+  public async getUserCheck({
+    convert = true,
+  }: { convert?: boolean } = {}): Promise<userCheck> {
     const url = '/ISAPI/Security/userCheck';
-    return this.get<userCheck>(url);
+    return this.get<userCheck>(url, { convert });
   }
 }
