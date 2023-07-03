@@ -11,6 +11,10 @@ import {
   DeviceInfo,
   DeviceStatus,
   ResponseStatus,
+  StreamingChannel,
+  StreamingChannelList,
+  StreamingSessionStatusList,
+  StreamingStatus,
   Time,
   userCheck,
 } from '@types';
@@ -61,6 +65,23 @@ interface ISAPI {
   ) => Promise<ResponseStatus>;
   getLocalTime: () => Promise<Datetime>;
   putLocalTime: (time: Datetime) => Promise<ResponseStatus>;
+
+  // /ISAPI/Streaming
+  getStreamingStatus: (args?: {
+    convert?: boolean;
+  }) => Promise<StreamingStatus>;
+  getStreamingChannels: (args?: {
+    convert?: boolean;
+  }) => Promise<StreamingChannelList>;
+  getStreamingChannel: (
+    id: string | number,
+    args?: { convert?: boolean },
+  ) => Promise<StreamingChannel>;
+  getStreamingChannelStatus: (
+    id: string | number,
+    args?: { convert?: boolean },
+  ) => Promise<StreamingSessionStatusList>;
+  getStreamingChannelPicture: (id: string | number) => Promise<ArrayBuffer>;
 }
 
 export const nativeType = (value: string) => {
@@ -322,5 +343,43 @@ export default class Isapi implements ISAPI {
   public async putLocalTime(time: Datetime): Promise<ResponseStatus> {
     const url = '/ISAPI/System/time/localTime';
     return this.put<ResponseStatus>(url, time, { convert: false });
+  }
+
+  // /ISAPI/Streaming
+  public async getStreamingStatus({
+    convert = true,
+  }: { convert?: boolean } = {}): Promise<StreamingStatus> {
+    const url = '/ISAPI/Streaming/status';
+    return this.get<StreamingStatus>(url, { convert });
+  }
+  public async getStreamingChannels({
+    convert = true,
+  }: { convert?: boolean } = {}): Promise<StreamingChannelList> {
+    const url = '/ISAPI/Streaming/channels';
+    return this.get<StreamingChannelList>(url, { convert });
+  }
+  public async getStreamingChannel(
+    id: string | number,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<StreamingChannel> {
+    const url = `/ISAPI/Streaming/channels/${id}`;
+    return this.get<StreamingChannel>(url, { convert });
+  }
+  public async getStreamingChannelStatus(
+    id: string | number,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<StreamingSessionStatusList> {
+    const url = `/ISAPI/Streaming/channels/${id}/status`;
+    return this.get<StreamingSessionStatusList>(url, { convert });
+  }
+  public async getStreamingChannelPicture(
+    id: string | number,
+  ): Promise<ArrayBuffer> {
+    const url = `/ISAPI/Streaming/channels/${id}/picture`;
+    return this.get(url, {
+      convert: false,
+      headers: { Accept: 'image/jpeg' },
+      config: { ...this.config, responseType: 'arraybuffer' },
+    });
   }
 }
