@@ -16,6 +16,8 @@ export * from './response_status';
 export * from './security_cap';
 export * from './serial_cap';
 export * from './smart_cap';
+export * from './streaming_session_status';
+export * from './streaming_status';
 export * from './tamper';
 export * from './temperature';
 export * from './thermal_cap';

@@ -11,6 +11,7 @@ import {
   DeviceInfo,
   DeviceStatus,
   ResponseStatus,
+  StreamingStatus,
   Time,
   userCheck,
 } from '@types';
@@ -61,6 +62,11 @@ interface ISAPI {
   ) => Promise<ResponseStatus>;
   getLocalTime: () => Promise<Datetime>;
   putLocalTime: (time: Datetime) => Promise<ResponseStatus>;
+
+  // /ISAPI/Streaming
+  getStreamingStatus: (args?: {
+    convert?: boolean;
+  }) => Promise<StreamingStatus>;
 }
 
 export const nativeType = (value: string) => {
@@ -322,5 +328,13 @@ export default class Isapi implements ISAPI {
   public async putLocalTime(time: Datetime): Promise<ResponseStatus> {
     const url = '/ISAPI/System/time/localTime';
     return this.put<ResponseStatus>(url, time, { convert: false });
+  }
+
+  // /ISAPI/Streaming
+  public async getStreamingStatus({
+    convert = true,
+  }: { convert?: boolean } = {}): Promise<StreamingStatus> {
+    const url = '/ISAPI/Streaming/status';
+    return this.get<StreamingStatus>(url, { convert });
   }
 }
