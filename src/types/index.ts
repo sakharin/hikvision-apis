@@ -22,6 +22,7 @@ export * from './ptz_preset_list';
 export * from './response_status';
 export * from './security_cap';
 export * from './serial_cap';
+export * from './set_ptz_preset';
 export * from './smart_cap';
 export * from './streaming_channel';
 export * from './streaming_channel_list';

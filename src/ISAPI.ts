@@ -16,6 +16,7 @@ import {
   PTZChannelList,
   PTZPresetList,
   ResponseStatus,
+  SetPTZPreset,
   StreamingChannel,
   StreamingChannelList,
   StreamingSessionStatusList,
@@ -76,6 +77,11 @@ interface ISAPI {
     channelID: string | number,
     args: { convert?: boolean },
   ) => Promise<PTZPresetList>;
+  postPTZCtrlChannelPresets: (
+    channelID: string | number,
+    preset: SetPTZPreset,
+    args: { convert?: boolean },
+  ) => Promise<ResponseStatus>;
 
   // /ISAPI/Security
   getUserCheck: (args?: { convert?: boolean }) => Promise<userCheck>;
@@ -358,6 +364,14 @@ export default class Isapi implements ISAPI {
   ): Promise<PTZPresetList> {
     const url = `/ISAPI/PTZCtrl/channels/${channelID}/presets`;
     return this.get<PTZPresetList>(url, { convert });
+  }
+  public async postPTZCtrlChannelPresets(
+    channelID: string | number,
+    preset: SetPTZPreset,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<ResponseStatus> {
+    const url = `/ISAPI/PTZCtrl/channels/${channelID}/presets`;
+    return this.post<ResponseStatus>(url, preset, { convert });
   }
 
   // /ISAPI/Security
