@@ -92,6 +92,12 @@ interface ISAPI {
     presetId: string | number,
     args: { convert?: boolean },
   ) => Promise<PTZPreset>;
+  putPTZCtrlChannelPreset: (
+    channelID: string | number,
+    presetId: string | number,
+    preset: SetPTZPreset,
+    args: { convert?: boolean },
+  ) => Promise<ResponseStatus>;
 
   // /ISAPI/Security
   getUserCheck: (args?: { convert?: boolean }) => Promise<userCheck>;
@@ -397,6 +403,15 @@ export default class Isapi implements ISAPI {
   ): Promise<PTZPreset> {
     const url = `/ISAPI/PTZCtrl/channels/${channelID}/presets/${presetId}`;
     return this.get<PTZPreset>(url, { convert });
+  }
+  public async putPTZCtrlChannelPreset(
+    channelID: string | number,
+    presetId: string | number,
+    preset: SetPTZPreset,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<ResponseStatus> {
+    const url = `/ISAPI/PTZCtrl/channels/${channelID}/presets/${presetId}`;
+    return this.put<ResponseStatus>(url, preset, { convert });
   }
 
   // /ISAPI/Security
