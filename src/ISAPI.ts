@@ -13,6 +13,7 @@ import {
   ResponseStatus,
   StreamingChannel,
   StreamingChannelList,
+  StreamingSessionStatusList,
   StreamingStatus,
   Time,
   userCheck,
@@ -76,6 +77,10 @@ interface ISAPI {
     id: string | number,
     args?: { convert?: boolean },
   ) => Promise<StreamingChannel>;
+  getStreamingChannelStatus: (
+    id: string | number,
+    args?: { convert?: boolean },
+  ) => Promise<StreamingSessionStatusList>;
 }
 
 export const nativeType = (value: string) => {
@@ -358,5 +363,12 @@ export default class Isapi implements ISAPI {
   ): Promise<StreamingChannel> {
     const url = `/ISAPI/Streaming/channels/${id}`;
     return this.get<StreamingChannel>(url, { convert });
+  }
+  public async getStreamingChannelStatus(
+    id: string | number,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<StreamingSessionStatusList> {
+    const url = `/ISAPI/Streaming/channels/${id}/status`;
+    return this.get<StreamingSessionStatusList>(url, { convert });
   }
 }

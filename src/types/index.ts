@@ -20,6 +20,7 @@ export * from './smart_cap';
 export * from './streaming_channel';
 export * from './streaming_channel_list';
 export * from './streaming_session_status';
+export * from './streaming_session_status_list';
 export * from './streaming_status';
 export * from './tamper';
 export * from './temperature';
