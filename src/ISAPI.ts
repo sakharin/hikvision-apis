@@ -10,6 +10,7 @@ import {
   DeviceCap,
   DeviceInfo,
   DeviceStatus,
+  PTZChannelList,
   ResponseStatus,
   StreamingChannel,
   StreamingChannelList,
@@ -50,6 +51,9 @@ interface ISAPI {
     args?: ExtraParams,
   ) => Promise<T>;
   delete: <T>(url: string, args?: ExtraParams) => Promise<T>;
+
+  // /ISAPI/PTZCtrl
+  getPTZCtrlChannels: (args?: { convert?: boolean }) => Promise<PTZChannelList>;
 
   // /ISAPI/Security
   getUserCheck: (args?: { convert?: boolean }) => Promise<userCheck>;
@@ -294,6 +298,14 @@ export default class Isapi implements ISAPI {
           );
         throw error;
       });
+  }
+
+  // /ISAPI/PTZCtrl
+  public async getPTZCtrlChannels({
+    convert = true,
+  }: { convert?: boolean } = {}): Promise<PTZChannelList> {
+    const url = '/ISAPI/PTZCtrl/channels';
+    return this.get<PTZChannelList>(url, { convert });
   }
 
   // /ISAPI/Security
