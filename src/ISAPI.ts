@@ -60,6 +60,7 @@ interface ISAPI {
     args?: { convert?: boolean },
   ) => Promise<ResponseStatus>;
   getLocalTime: () => Promise<Datetime>;
+  putLocalTime: (time: Datetime) => Promise<ResponseStatus>;
 }
 
 export const nativeType = (value: string) => {
@@ -317,5 +318,9 @@ export default class Isapi implements ISAPI {
   public async getLocalTime(): Promise<Datetime> {
     const url = '/ISAPI/System/time/localTime';
     return this.get<Datetime>(url, { convert: false });
+  }
+  public async putLocalTime(time: Datetime): Promise<ResponseStatus> {
+    const url = '/ISAPI/System/time/localTime';
+    return this.put<ResponseStatus>(url, time, { convert: false });
   }
 }
