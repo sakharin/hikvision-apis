@@ -6,6 +6,7 @@ import axios, {
 import xmljs, { ElementCompact } from 'xml-js';
 
 import {
+  Datetime,
   DeviceCap,
   DeviceInfo,
   DeviceStatus,
@@ -13,6 +14,7 @@ import {
   Time,
   userCheck,
 } from '@types';
+
 interface ISAPIConfig {
   host: string;
   port: string | number;
@@ -57,6 +59,7 @@ interface ISAPI {
     time: Time | string,
     args?: { convert?: boolean },
   ) => Promise<ResponseStatus>;
+  getLocalTime: () => Promise<Datetime>;
 }
 
 export const nativeType = (value: string) => {
@@ -310,5 +313,9 @@ export default class Isapi implements ISAPI {
   ): Promise<ResponseStatus> {
     const url = '/ISAPI/System/time';
     return this.put<ResponseStatus>(url, time, { convert });
+  }
+  public async getLocalTime(): Promise<Datetime> {
+    const url = '/ISAPI/System/time/localTime';
+    return this.get<Datetime>(url, { convert: false });
   }
 }
