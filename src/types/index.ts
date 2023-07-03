@@ -17,6 +17,8 @@ export * from './memory';
 export * from './pressure';
 export * from './ptz_channel';
 export * from './ptz_channel_list';
+export * from './ptz_preset';
+export * from './ptz_preset_list';
 export * from './response_status';
 export * from './security_cap';
 export * from './serial_cap';
