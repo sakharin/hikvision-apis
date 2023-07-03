@@ -81,6 +81,7 @@ interface ISAPI {
     id: string | number,
     args?: { convert?: boolean },
   ) => Promise<StreamingSessionStatusList>;
+  getStreamingChannelPicture: (id: string | number) => Promise<ArrayBuffer>;
 }
 
 export const nativeType = (value: string) => {
@@ -370,5 +371,15 @@ export default class Isapi implements ISAPI {
   ): Promise<StreamingSessionStatusList> {
     const url = `/ISAPI/Streaming/channels/${id}/status`;
     return this.get<StreamingSessionStatusList>(url, { convert });
+  }
+  public async getStreamingChannelPicture(
+    id: string | number,
+  ): Promise<ArrayBuffer> {
+    const url = `/ISAPI/Streaming/channels/${id}/picture`;
+    return this.get(url, {
+      convert: false,
+      headers: { Accept: 'image/jpeg' },
+      config: { ...this.config, responseType: 'arraybuffer' },
+    });
   }
 }
