@@ -11,6 +11,7 @@ import {
   DeviceCap,
   DeviceInfo,
   DeviceStatus,
+  ManualPTZData,
   PTZChannel,
   PTZChannelList,
   ResponseStatus,
@@ -63,6 +64,11 @@ interface ISAPI {
   putPTZCtrlChannelAbsolute: (
     channelID: string | number,
     absolutePTZ: AbsolutePTZData,
+    args: { convert?: boolean },
+  ) => Promise<ResponseStatus>;
+  putPTZCtrlChannelContinuous: (
+    channelID: string | number,
+    absolutePTZ: ManualPTZData,
     args: { convert?: boolean },
   ) => Promise<ResponseStatus>;
 
@@ -331,6 +337,14 @@ export default class Isapi implements ISAPI {
     { convert = true }: { convert?: boolean } = {},
   ): Promise<ResponseStatus> {
     const url = `/ISAPI/PTZCtrl/channels/${channelID}/absolute`;
+    return this.put<ResponseStatus>(url, absolutePTZ, { convert });
+  }
+  public async putPTZCtrlChannelContinuous(
+    channelID: string | number,
+    absolutePTZ: ManualPTZData,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<ResponseStatus> {
+    const url = `/ISAPI/PTZCtrl/channels/${channelID}/continuous`;
     return this.put<ResponseStatus>(url, absolutePTZ, { convert });
   }
 

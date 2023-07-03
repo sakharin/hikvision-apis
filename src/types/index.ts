@@ -12,6 +12,7 @@ export * from './dome_info';
 export * from './event_cap';
 export * from './fan';
 export * from './io_cap';
+export * from './manual_ptz_data';
 export * from './memory';
 export * from './pressure';
 export * from './ptz_channel';
