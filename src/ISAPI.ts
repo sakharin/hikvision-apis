@@ -6,11 +6,18 @@ import axios, {
 import xmljs, { ElementCompact } from 'xml-js';
 
 import {
+  AbsolutePTZData,
   Datetime,
   DeviceCap,
   DeviceInfo,
   DeviceStatus,
+  ManualPTZData,
+  PTZChannel,
+  PTZChannelList,
+  PTZPreset,
+  PTZPresetList,
   ResponseStatus,
+  SetPTZPreset,
   StreamingChannel,
   StreamingChannelList,
   StreamingSessionStatusList,
@@ -50,6 +57,57 @@ interface ISAPI {
     args?: ExtraParams,
   ) => Promise<T>;
   delete: <T>(url: string, args?: ExtraParams) => Promise<T>;
+
+  // /ISAPI/PTZCtrl
+  getPTZCtrlChannels: (args?: { convert?: boolean }) => Promise<PTZChannelList>;
+  getPTZCtrlChannel: (
+    id: string | number,
+    args?: { convert?: boolean },
+  ) => Promise<PTZChannel>;
+  putPTZCtrlChannelAbsolute: (
+    channelID: string | number,
+    absolutePTZ: AbsolutePTZData,
+    args: { convert?: boolean },
+  ) => Promise<ResponseStatus>;
+  putPTZCtrlChannelContinuous: (
+    channelID: string | number,
+    absolutePTZ: ManualPTZData,
+    args: { convert?: boolean },
+  ) => Promise<ResponseStatus>;
+  getPTZCtrlChannelPresets: (
+    channelID: string | number,
+    args: { convert?: boolean },
+  ) => Promise<PTZPresetList>;
+  postPTZCtrlChannelPresets: (
+    channelID: string | number,
+    preset: SetPTZPreset,
+    args: { convert?: boolean },
+  ) => Promise<ResponseStatus>;
+  deletePTZCtrlChannelPresets: (
+    channelID: string | number,
+    args: { convert?: boolean },
+  ) => Promise<ResponseStatus>;
+  getPTZCtrlChannelPreset: (
+    channelID: string | number,
+    presetId: string | number,
+    args: { convert?: boolean },
+  ) => Promise<PTZPreset>;
+  putPTZCtrlChannelPreset: (
+    channelID: string | number,
+    presetId: string | number,
+    preset: SetPTZPreset,
+    args: { convert?: boolean },
+  ) => Promise<ResponseStatus>;
+  deletePTZCtrlChannelPreset: (
+    channelID: string | number,
+    presetId: string | number,
+    args: { convert?: boolean },
+  ) => Promise<ResponseStatus>;
+  putPTZCtrlChannelPresetGoto: (
+    channelID: string | number,
+    presetId: string | number,
+    args: { convert?: boolean },
+  ) => Promise<ResponseStatus>;
 
   // /ISAPI/Security
   getUserCheck: (args?: { convert?: boolean }) => Promise<userCheck>;
@@ -294,6 +352,92 @@ export default class Isapi implements ISAPI {
           );
         throw error;
       });
+  }
+
+  // /ISAPI/PTZCtrl
+  public async getPTZCtrlChannels({
+    convert = true,
+  }: { convert?: boolean } = {}): Promise<PTZChannelList> {
+    const url = '/ISAPI/PTZCtrl/channels';
+    return this.get<PTZChannelList>(url, { convert });
+  }
+  public async getPTZCtrlChannel(
+    id: string | number,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<PTZChannel> {
+    const url = `/ISAPI/PTZCtrl/channels/${id}`;
+    return this.get<PTZChannel>(url, { convert });
+  }
+  public async putPTZCtrlChannelAbsolute(
+    channelID: string | number,
+    absolutePTZ: AbsolutePTZData,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<ResponseStatus> {
+    const url = `/ISAPI/PTZCtrl/channels/${channelID}/absolute`;
+    return this.put<ResponseStatus>(url, absolutePTZ, { convert });
+  }
+  public async putPTZCtrlChannelContinuous(
+    channelID: string | number,
+    absolutePTZ: ManualPTZData,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<ResponseStatus> {
+    const url = `/ISAPI/PTZCtrl/channels/${channelID}/continuous`;
+    return this.put<ResponseStatus>(url, absolutePTZ, { convert });
+  }
+  public async getPTZCtrlChannelPresets(
+    channelID: string | number,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<PTZPresetList> {
+    const url = `/ISAPI/PTZCtrl/channels/${channelID}/presets`;
+    return this.get<PTZPresetList>(url, { convert });
+  }
+  public async postPTZCtrlChannelPresets(
+    channelID: string | number,
+    preset: SetPTZPreset,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<ResponseStatus> {
+    const url = `/ISAPI/PTZCtrl/channels/${channelID}/presets`;
+    return this.post<ResponseStatus>(url, preset, { convert });
+  }
+  public async deletePTZCtrlChannelPresets(
+    channelID: string | number,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<ResponseStatus> {
+    const url = `/ISAPI/PTZCtrl/channels/${channelID}/presets`;
+    return this.delete<ResponseStatus>(url, { convert });
+  }
+  public async getPTZCtrlChannelPreset(
+    channelID: string | number,
+    presetId: string | number,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<PTZPreset> {
+    const url = `/ISAPI/PTZCtrl/channels/${channelID}/presets/${presetId}`;
+    return this.get<PTZPreset>(url, { convert });
+  }
+  public async putPTZCtrlChannelPreset(
+    channelID: string | number,
+    presetId: string | number,
+    preset: SetPTZPreset,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<ResponseStatus> {
+    const url = `/ISAPI/PTZCtrl/channels/${channelID}/presets/${presetId}`;
+    return this.put<ResponseStatus>(url, preset, { convert });
+  }
+  public async deletePTZCtrlChannelPreset(
+    channelID: string | number,
+    presetId: string | number,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<ResponseStatus> {
+    const url = `/ISAPI/PTZCtrl/channels/${channelID}/presets/${presetId}`;
+    return this.delete<ResponseStatus>(url, { convert });
+  }
+  public async putPTZCtrlChannelPresetGoto(
+    channelID: string | number,
+    presetId: string | number,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<ResponseStatus> {
+    const url = `/ISAPI/PTZCtrl/channels/${channelID}/presets/${presetId}/goto`;
+    return this.put<ResponseStatus>(url, { convert });
   }
 
   // /ISAPI/Security
