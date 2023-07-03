@@ -5,7 +5,63 @@ import axios, {
 } from 'axios';
 import xmljs, { ElementCompact } from 'xml-js';
 
-import { userCheck } from '@types';
+import {
+  Datetime,
+  DeviceCap,
+  DeviceInfo,
+  DeviceStatus,
+  ResponseStatus,
+  Time,
+  userCheck,
+} from '@types';
+
+interface ISAPIConfig {
+  host: string;
+  port: string | number;
+  username: string;
+  password: string;
+}
+
+interface ExtraParams {
+  convert?: boolean;
+  config?: AxiosRequestConfig;
+  headers?: RawAxiosRequestHeaders;
+}
+
+interface ISAPI {
+  get: <T>(url: string, args?: ExtraParams) => Promise<T>;
+  post: <T>(
+    url: string,
+    data?: object | string,
+    args?: ExtraParams,
+  ) => Promise<T>;
+  put: <T>(
+    url: string,
+    data?: object | string,
+    args?: ExtraParams,
+  ) => Promise<T>;
+  patch: <T>(
+    url: string,
+    data?: object | string,
+    args?: ExtraParams,
+  ) => Promise<T>;
+  delete: <T>(url: string, args?: ExtraParams) => Promise<T>;
+
+  // /ISAPI/Security
+  getUserCheck: (args?: { convert?: boolean }) => Promise<userCheck>;
+
+  // /ISAPI/System
+  getCapabilities: (args?: { convert?: boolean }) => Promise<DeviceCap>;
+  getDeviceInfo: (args?: { convert?: boolean }) => Promise<DeviceInfo>;
+  getSystemStatus: (args?: { convert?: boolean }) => Promise<DeviceStatus>;
+  getTime: (args?: { convert?: boolean }) => Promise<Time>;
+  putTime: (
+    time: Time | string,
+    args?: { convert?: boolean },
+  ) => Promise<ResponseStatus>;
+  getLocalTime: () => Promise<Datetime>;
+  putLocalTime: (time: Datetime) => Promise<ResponseStatus>;
+}
 
 export const nativeType = (value: string) => {
   const nValue = Number(value);
@@ -38,19 +94,14 @@ export const removeJsonTextAttribute = (
   }
 };
 
-export default class ISAPI {
+export default class Isapi implements ISAPI {
   private auth: AxiosBasicCredentials;
   private headers: RawAxiosRequestHeaders;
   private config: AxiosRequestConfig;
   private xml2jsOpt: xmljs.Options.XML2JS;
   private js2xmlOpt: xmljs.Options.JS2XML;
 
-  constructor(args: {
-    host: string;
-    port: string | number;
-    username: string;
-    password: string;
-  }) {
+  constructor(args: ISAPIConfig) {
     const { host, port, username, password } = args;
 
     this.auth = { username, password };
@@ -80,11 +131,7 @@ export default class ISAPI {
       convert = true,
       config = this.config,
       headers = this.headers,
-    }: {
-      convert?: boolean;
-      config?: AxiosRequestConfig;
-      headers?: RawAxiosRequestHeaders;
-    } = {},
+    }: ExtraParams = {},
   ): Promise<T> {
     return axios
       .get(url, { ...config, headers })
@@ -110,11 +157,7 @@ export default class ISAPI {
       convert = true,
       config = this.config,
       headers = this.headers,
-    }: {
-      convert?: boolean;
-      config?: AxiosRequestConfig;
-      headers?: RawAxiosRequestHeaders;
-    } = {},
+    }: ExtraParams = {},
   ): Promise<T> {
     return axios
       .post(
@@ -148,11 +191,7 @@ export default class ISAPI {
       convert = true,
       config = this.config,
       headers = this.headers,
-    }: {
-      convert?: boolean;
-      config?: AxiosRequestConfig;
-      headers?: RawAxiosRequestHeaders;
-    } = {},
+    }: ExtraParams = {},
   ): Promise<T> {
     return axios
       .put(
@@ -186,11 +225,7 @@ export default class ISAPI {
       convert = true,
       config = this.config,
       headers = this.headers,
-    }: {
-      convert?: boolean;
-      config?: AxiosRequestConfig;
-      headers?: RawAxiosRequestHeaders;
-    } = {},
+    }: ExtraParams = {},
   ): Promise<T> {
     return axios
       .patch(
@@ -221,11 +256,7 @@ export default class ISAPI {
       convert = true,
       config = this.config,
       headers = this.headers,
-    }: {
-      convert?: boolean;
-      config?: AxiosRequestConfig;
-      headers?: RawAxiosRequestHeaders;
-    } = {},
+    }: ExtraParams = {},
   ): Promise<T> {
     return axios
       .delete(url, { ...config, headers })
@@ -250,5 +281,46 @@ export default class ISAPI {
   }: { convert?: boolean } = {}): Promise<userCheck> {
     const url = '/ISAPI/Security/userCheck';
     return this.get<userCheck>(url, { convert });
+  }
+
+  // /ISAPI/System
+  public async getCapabilities({
+    convert = true,
+  }: { convert?: boolean } = {}): Promise<DeviceCap> {
+    const url = '/ISAPI/System/capabilities';
+    return this.get<DeviceCap>(url, { convert });
+  }
+  public async getDeviceInfo({
+    convert = true,
+  }: { convert?: boolean } = {}): Promise<DeviceInfo> {
+    const url = '/ISAPI/System/deviceInfo';
+    return this.get<DeviceInfo>(url, { convert });
+  }
+  public async getSystemStatus({
+    convert = true,
+  }: { convert?: boolean } = {}): Promise<DeviceStatus> {
+    const url = '/ISAPI/System/status';
+    return this.get<DeviceStatus>(url, { convert });
+  }
+  public async getTime({
+    convert = true,
+  }: { convert?: boolean } = {}): Promise<Time> {
+    const url = '/ISAPI/System/time';
+    return this.get<Time>(url, { convert });
+  }
+  public async putTime(
+    time: Time | string,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<ResponseStatus> {
+    const url = '/ISAPI/System/time';
+    return this.put<ResponseStatus>(url, time, { convert });
+  }
+  public async getLocalTime(): Promise<Datetime> {
+    const url = '/ISAPI/System/time/localTime';
+    return this.get<Datetime>(url, { convert: false });
+  }
+  public async putLocalTime(time: Datetime): Promise<ResponseStatus> {
+    const url = '/ISAPI/System/time/localTime';
+    return this.put<ResponseStatus>(url, time, { convert: false });
   }
 }

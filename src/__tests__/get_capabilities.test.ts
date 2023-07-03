@@ -1,8 +1,8 @@
 import axios, { AxiosError } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
-import Isapi from '@ISAPI';
-import { ResponseStatus, userCheck } from '@types';
+import ISAPI from '@ISAPI';
+import { DeviceCap, ResponseStatus } from '@types';
 
 const config = {
   host: '192.168.1.64',
@@ -10,10 +10,10 @@ const config = {
   username: 'admin',
   password: 'password',
 };
-const instance = new Isapi(config);
+const instance = new ISAPI(config);
 
-describe('getUserCheck', () => {
-  const url = '/ISAPI/Security/userCheck';
+describe('getCapabilities', () => {
+  const url = '/ISAPI/System/capabilities';
   let mock: MockAdapter;
 
   beforeAll(() => {
@@ -27,17 +27,18 @@ describe('getUserCheck', () => {
   describe('success cases', () => {
     const xmlResponse =
       '<?xml version="1.0" encoding="UTF-8"?>\r\n' +
-      '<userCheck>\r\n' +
-      '<statusValue>200</statusValue>\r\n' +
-      '<statusString>OK</statusString>\r\n' +
-      '</userCheck>\r\n';
+      '<DeviceCap>\r\n' +
+      '<SysCap>\r\n' +
+      '<isSupportDst>true</isSupportDst>\r\n' +
+      '</SysCap>\r\n' +
+      '</DeviceCap>\r\n';
     const objectResponse = {
-      userCheck: { statusValue: 200, statusString: 'OK' },
+      DeviceCap: { SysCap: { isSupportDst: true } },
     };
 
     it('request object', async () => {
       mock.onGet(url).reply(200, xmlResponse);
-      await instance.getUserCheck().then((result: userCheck) => {
+      await instance.getCapabilities().then((result: DeviceCap) => {
         expect(result).toEqual(objectResponse);
       });
       expect(mock.history.get[0].url).toEqual(url);
@@ -46,8 +47,8 @@ describe('getUserCheck', () => {
     it('request xml', async () => {
       mock.onGet(url).reply(200, xmlResponse);
       await instance
-        .getUserCheck({ convert: false })
-        .then((result: userCheck) => {
+        .getCapabilities({ convert: false })
+        .then((result: DeviceCap) => {
           expect(result).toEqual(xmlResponse);
         });
       expect(mock.history.get[0].url).toEqual(url);
@@ -58,10 +59,10 @@ describe('getUserCheck', () => {
     const xmlResponse =
       '<?xml version="1.0" encoding="utf-8"?>\r\n' +
       '<ResponseStatus version="2.0" xmlns="http://www.std-cgi.org/ver20/XMLSchema">\r\n' +
-      '<requestURL>/ISAPI/Security/userCheck</requestURL>\r\n' +
-      '<statusCode>6</statusCode>\r\n' +
-      '<statusString>Invalid XML Content</statusString>\r\n' +
-      '<subStatusCode>incorrectUserNameOrPassword</subStatusCode>\r\n' +
+      '<requestURL>/ISAPI/System/capabilities</requestURL>\r\n' +
+      '<statusCode>4</statusCode>\r\n' +
+      '<statusString>Invalid Operation</statusString>\r\n' +
+      '<subStatusCode>notSupport</subStatusCode>\r\n' +
       '</ResponseStatus>\r\n';
 
     const objectResponse = {
@@ -70,17 +71,17 @@ describe('getUserCheck', () => {
           version: '2.0',
           xmlns: 'http://www.std-cgi.org/ver20/XMLSchema',
         },
-        requestURL: '/ISAPI/Security/userCheck',
-        statusCode: 6,
-        statusString: 'Invalid XML Content',
-        subStatusCode: 'incorrectUserNameOrPassword',
+        requestURL: '/ISAPI/System/capabilities',
+        statusCode: 4,
+        statusString: 'Invalid Operation',
+        subStatusCode: 'notSupport',
       },
     };
 
     it('request object', async () => {
       mock.onGet(url).reply(401, xmlResponse);
       await instance
-        .getUserCheck()
+        .getCapabilities()
         .catch((error: AxiosError<ResponseStatus>) => {
           expect(error.response).toHaveProperty('data');
           expect(error.response?.data).toEqual(objectResponse);
@@ -91,7 +92,7 @@ describe('getUserCheck', () => {
     it('request xml', async () => {
       mock.onGet(url).reply(401, xmlResponse);
       await instance
-        .getUserCheck({ convert: false })
+        .getCapabilities({ convert: false })
         .catch((error: AxiosError<ResponseStatus>) => {
           expect(error.response).toHaveProperty('data');
           expect(error.response?.data).toEqual(xmlResponse);
