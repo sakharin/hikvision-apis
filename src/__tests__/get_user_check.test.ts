@@ -1,7 +1,7 @@
 import axios, { AxiosError } from 'axios';
 import MockAdapter from 'axios-mock-adapter';
 
-import ISAPI from '@ISAPI';
+import Isapi from '@ISAPI';
 import { ResponseStatus, userCheck } from '@types';
 
 const config = {
@@ -10,7 +10,7 @@ const config = {
   username: 'admin',
   password: 'password',
 };
-const instance = new ISAPI(config);
+const instance = new Isapi(config);
 
 describe('getUserCheck', () => {
   const url = '/ISAPI/Security/userCheck';

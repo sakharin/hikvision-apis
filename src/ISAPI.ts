@@ -6,6 +6,41 @@ import axios, {
 import xmljs, { ElementCompact } from 'xml-js';
 
 import { userCheck } from '@types';
+interface ISAPIConfig {
+  host: string;
+  port: string | number;
+  username: string;
+  password: string;
+}
+
+interface ExtraParams {
+  convert?: boolean;
+  config?: AxiosRequestConfig;
+  headers?: RawAxiosRequestHeaders;
+}
+
+interface ISAPI {
+  get: <T>(url: string, args?: ExtraParams) => Promise<T>;
+  post: <T>(
+    url: string,
+    data?: object | string,
+    args?: ExtraParams,
+  ) => Promise<T>;
+  put: <T>(
+    url: string,
+    data?: object | string,
+    args?: ExtraParams,
+  ) => Promise<T>;
+  patch: <T>(
+    url: string,
+    data?: object | string,
+    args?: ExtraParams,
+  ) => Promise<T>;
+  delete: <T>(url: string, args?: ExtraParams) => Promise<T>;
+
+  // /ISAPI/Security
+  getUserCheck: (args?: { convert?: boolean }) => Promise<userCheck>;
+}
 
 export const nativeType = (value: string) => {
   const nValue = Number(value);
@@ -38,19 +73,14 @@ export const removeJsonTextAttribute = (
   }
 };
 
-export default class ISAPI {
+export default class Isapi implements ISAPI {
   private auth: AxiosBasicCredentials;
   private headers: RawAxiosRequestHeaders;
   private config: AxiosRequestConfig;
   private xml2jsOpt: xmljs.Options.XML2JS;
   private js2xmlOpt: xmljs.Options.JS2XML;
 
-  constructor(args: {
-    host: string;
-    port: string | number;
-    username: string;
-    password: string;
-  }) {
+  constructor(args: ISAPIConfig) {
     const { host, port, username, password } = args;
 
     this.auth = { username, password };
@@ -80,11 +110,7 @@ export default class ISAPI {
       convert = true,
       config = this.config,
       headers = this.headers,
-    }: {
-      convert?: boolean;
-      config?: AxiosRequestConfig;
-      headers?: RawAxiosRequestHeaders;
-    } = {},
+    }: ExtraParams = {},
   ): Promise<T> {
     return axios
       .get(url, { ...config, headers })
@@ -110,11 +136,7 @@ export default class ISAPI {
       convert = true,
       config = this.config,
       headers = this.headers,
-    }: {
-      convert?: boolean;
-      config?: AxiosRequestConfig;
-      headers?: RawAxiosRequestHeaders;
-    } = {},
+    }: ExtraParams = {},
   ): Promise<T> {
     return axios
       .post(
@@ -148,11 +170,7 @@ export default class ISAPI {
       convert = true,
       config = this.config,
       headers = this.headers,
-    }: {
-      convert?: boolean;
-      config?: AxiosRequestConfig;
-      headers?: RawAxiosRequestHeaders;
-    } = {},
+    }: ExtraParams = {},
   ): Promise<T> {
     return axios
       .put(
@@ -186,11 +204,7 @@ export default class ISAPI {
       convert = true,
       config = this.config,
       headers = this.headers,
-    }: {
-      convert?: boolean;
-      config?: AxiosRequestConfig;
-      headers?: RawAxiosRequestHeaders;
-    } = {},
+    }: ExtraParams = {},
   ): Promise<T> {
     return axios
       .patch(
@@ -221,11 +235,7 @@ export default class ISAPI {
       convert = true,
       config = this.config,
       headers = this.headers,
-    }: {
-      convert?: boolean;
-      config?: AxiosRequestConfig;
-      headers?: RawAxiosRequestHeaders;
-    } = {},
+    }: ExtraParams = {},
   ): Promise<T> {
     return axios
       .delete(url, { ...config, headers })
