@@ -1,3 +1,4 @@
+export * from './absolute_ptz_data';
 export * from './audio_cap';
 export * from './camera';
 export * from './control_protocol';

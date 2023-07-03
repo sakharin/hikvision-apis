@@ -6,6 +6,7 @@ import axios, {
 import xmljs, { ElementCompact } from 'xml-js';
 
 import {
+  AbsolutePTZData,
   Datetime,
   DeviceCap,
   DeviceInfo,
@@ -59,6 +60,11 @@ interface ISAPI {
     id: string | number,
     args?: { convert?: boolean },
   ) => Promise<PTZChannel>;
+  putPTZCtrlChannelAbsolute: (
+    channelID: string | number,
+    absolutePTZ: AbsolutePTZData,
+    args: { convert?: boolean },
+  ) => Promise<ResponseStatus>;
 
   // /ISAPI/Security
   getUserCheck: (args?: { convert?: boolean }) => Promise<userCheck>;
@@ -318,6 +324,14 @@ export default class Isapi implements ISAPI {
   ): Promise<PTZChannel> {
     const url = `/ISAPI/PTZCtrl/channels/${id}`;
     return this.get<PTZChannel>(url, { convert });
+  }
+  public async putPTZCtrlChannelAbsolute(
+    channelID: string | number,
+    absolutePTZ: AbsolutePTZData,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<ResponseStatus> {
+    const url = `/ISAPI/PTZCtrl/channels/${channelID}/absolute`;
+    return this.put<ResponseStatus>(url, absolutePTZ, { convert });
   }
 
   // /ISAPI/Security
