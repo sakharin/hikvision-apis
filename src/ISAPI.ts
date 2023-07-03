@@ -11,6 +11,7 @@ import {
   DeviceInfo,
   DeviceStatus,
   ResponseStatus,
+  StreamingChannel,
   StreamingChannelList,
   StreamingStatus,
   Time,
@@ -71,6 +72,10 @@ interface ISAPI {
   getStreamingChannels: (args?: {
     convert?: boolean;
   }) => Promise<StreamingChannelList>;
+  getStreamingChannel: (
+    id: string | number,
+    args?: { convert?: boolean },
+  ) => Promise<StreamingChannel>;
 }
 
 export const nativeType = (value: string) => {
@@ -346,5 +351,12 @@ export default class Isapi implements ISAPI {
   }: { convert?: boolean } = {}): Promise<StreamingChannelList> {
     const url = '/ISAPI/Streaming/channels';
     return this.get<StreamingChannelList>(url, { convert });
+  }
+  public async getStreamingChannel(
+    id: string | number,
+    { convert = true }: { convert?: boolean } = {},
+  ): Promise<StreamingChannel> {
+    const url = `/ISAPI/Streaming/channels/${id}`;
+    return this.get<StreamingChannel>(url, { convert });
   }
 }
