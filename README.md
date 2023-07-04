@@ -111,3 +111,7 @@ npm run doc
 ```
 
 Then open `docs/index.html`.
+
+# References
+
+The project structure is modified from [tomchen/example-typescript-package](https://github.com/tomchen/example-typescript-package).
