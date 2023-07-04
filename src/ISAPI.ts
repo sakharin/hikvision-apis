@@ -26,20 +26,20 @@ import {
   userCheck,
 } from '@types';
 
-interface ISAPIConfig {
+export interface ISAPIConfig {
   host: string;
   port: string | number;
   username: string;
   password: string;
 }
 
-interface ExtraParams {
+export interface ExtraParams {
   convert?: boolean;
   config?: AxiosRequestConfig;
   headers?: RawAxiosRequestHeaders;
 }
 
-interface ISAPI {
+export interface ISAPI {
   get: <T>(url: string, args?: ExtraParams) => Promise<T>;
   post: <T>(
     url: string,
